@@ -1,2 +1,8 @@
 /.env.local
 /node_modules
+.next
+.DS_Store
+.next/cache/webpack/client-development/0.pack.gz
+.next/trace
+package-lock.json
+.env
