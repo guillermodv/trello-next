@@ -5,6 +5,7 @@ import { create } from 'zustand'
 import { arrayMove } from '@dnd-kit/sortable'
 import { DragEndEvent } from '@dnd-kit/core'
 import { API } from '@/lib/constants'
+import toast from 'react-hot-toast'
 
 const supabase = createClient()
 
@@ -94,7 +95,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     if (!board) return
 
     const newPosition = lists.length
-    const { data: newList, error } = await supabase
+    const promise = supabase
       .from(API.LISTS)
       .insert({
         title,
@@ -104,12 +105,16 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       .select()
       .single()
 
-    if (error || !newList) {
-      console.error('Failed to create list:', error)
-      return
-    }
-
-    set({ lists: [...lists, { ...newList, cards: [] }] })
+    toast.promise(promise, {
+      loading: 'Adding list...',
+      success: (newList) => {
+        if (newList.data) {
+          set({ lists: [...lists, { ...newList.data, cards: [] }] })
+        }
+        return 'List added!'
+      },
+      error: 'Failed to add list.',
+    })
   },
   addCard: async (listId: string, title: string) => {
     const { lists } = get()
@@ -117,7 +122,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     if (!targetList) return
 
     const newPosition = targetList.cards.length
-    const { data: newCard, error } = await supabase
+    const promise = supabase
       .from(API.CARDS)
       .insert({
         title,
@@ -127,91 +132,106 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       .select()
       .single()
 
-    if (error || !newCard) {
-      console.error('Failed to create card:', error)
-      return
-    }
-
-    const newLists = lists.map((list) => {
-      if (list.id === listId) {
-        return {
-          ...list,
-          cards: [...list.cards, newCard as Card],
+    toast.promise(promise, {
+      loading: 'Adding card...',
+      success: (newCard) => {
+        if (newCard.data) {
+          const newLists = lists.map((list) => {
+            if (list.id === listId) {
+              return {
+                ...list,
+                cards: [...list.cards, newCard.data as Card],
+              }
+            }
+            return list
+          })
+          set({ lists: newLists })
         }
-      }
-      return list
+        return 'Card added!'
+      },
+      error: 'Failed to add card.',
     })
-
-    set({ lists: newLists })
   },
   deleteList: async (listId: string) => {
-    const { error } = await supabase.from(API.LISTS).delete().eq('id', listId)
+    const promise = supabase.from(API.LISTS).delete().eq('id', listId)
 
-    if (error) {
-      console.error('Failed to delete list:', error)
-      return
-    }
-
-    const newLists = get().lists.filter((list) => list.id !== listId)
-    set({ lists: newLists })
+    toast.promise(promise, {
+      loading: 'Deleting list...',
+      success: () => {
+        const newLists = get().lists.filter((list) => list.id !== listId)
+        set({ lists: newLists })
+        return 'List deleted!'
+      },
+      error: 'Failed to delete list.',
+    })
   },
   deleteCard: async (cardId: string) => {
-    const { error } = await supabase.from(API.CARDS).delete().eq('id', cardId)
+    const promise = supabase.from(API.CARDS).delete().eq('id', cardId)
 
-    if (error) {
-      console.error('Failed to delete card:', error)
-      return
-    }
-
-    const newLists = get().lists.map((list) => ({
-      ...list,
-      cards: list.cards.filter((card) => card.id !== cardId),
-    }))
-    set({ lists: newLists })
+    toast.promise(promise, {
+      loading: 'Deleting card...',
+      success: () => {
+        const newLists = get().lists.map((list) => ({
+          ...list,
+          cards: list.cards.filter((card) => card.id !== cardId),
+        }))
+        set({ lists: newLists })
+        return 'Card deleted!'
+      },
+      error: 'Failed to delete card.',
+    })
   },
   updateListTitle: async (listId: string, newTitle: string) => {
-    const { error } = await supabase
+    const promise = supabase
       .from(API.LISTS)
       .update({ title: newTitle })
       .eq('id', listId)
 
-    if (error) {
-      console.error('Failed to update list title:', error)
-      return
-    }
-
-    const newLists = get().lists.map((list) => {
-      if (list.id === listId) {
-        return { ...list, title: newTitle }
-      }
-      return list
+    toast.promise(promise, {
+      loading: 'Updating title...',
+      success: () => {
+        const newLists = get().lists.map((list) => {
+          if (list.id === listId) {
+            return { ...list, title: newTitle }
+          }
+          return list
+        })
+        set({ lists: newLists })
+        return 'Title updated!'
+      },
+      error: 'Failed to update title.',
     })
-    set({ lists: newLists })
   },
   updateCard: async (cardId: string, updatedFields: Partial<Card>) => {
-    const { data: updatedCard, error } = await supabase
+    const promise = supabase
       .from(API.CARDS)
       .update(updatedFields)
       .eq('id', cardId)
       .select()
       .single()
 
-    if (error || !updatedCard) {
-      console.error('Failed to update card:', error)
-      return error
-    }
-
-    const newLists = get().lists.map((list) => ({
-      ...list,
-      cards: list.cards.map((card) => {
-        if (card.id === cardId) {
-          return { ...card, ...updatedCard }
+    toast.promise(promise, {
+      loading: 'Updating card...',
+      success: (updatedCard) => {
+        if (updatedCard.data) {
+          const newLists = get().lists.map((list) => ({
+            ...list,
+            cards: list.cards.map((card) => {
+              if (card.id === cardId) {
+                return { ...card, ...updatedCard.data }
+              }
+              return card
+            }),
+          }))
+          set({ lists: newLists })
         }
-        return card
-      }),
-    }))
-    set({ lists: newLists })
-    return null
+        return 'Card updated!'
+      },
+      error: 'Failed to update card.',
+    })
+
+    const { error } = await promise
+    return error
   },
   handleDragEnd: async (event: DragEndEvent) => {
     const { active, over } = event

@@ -5,8 +5,13 @@ import { FormEvent, useEffect, useState } from 'react'
 const URL_REGEX = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i
 
 export function CardModal() {
-  const { isCardModalOpen, activeCard, closeCardModal, updateCard } =
-    useBoardStore()
+  const {
+    isCardModalOpen,
+    activeCard,
+    closeCardModal,
+    updateCard,
+    deleteCard,
+  } = useBoardStore()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [author, setAuthor] = useState('')
@@ -52,6 +57,14 @@ export function CardModal() {
     }
   }
 
+  const handleDelete = () => {
+    if (!activeCard) return
+    if (window.confirm('Are you sure you want to delete this card?')) {
+      deleteCard(activeCard.id)
+      closeCardModal()
+    }
+  }
+
   if (!isCardModalOpen || !activeCard) {
     return null
   }
@@ -90,17 +103,30 @@ export function CardModal() {
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
-              style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+              style={{
+                width: '100%',
+                padding: 8,
+                borderRadius: 4,
+                border: '1px solid #ccc',
+              }}
             />
           </div>
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', marginBottom: 8 }}>Descripcion</label>
+            <label style={{ display: 'block', marginBottom: 8 }}>
+              Descripcion
+            </label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
               rows={4}
-              style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc', resize: 'vertical' }}
+              style={{
+                width: '100%',
+                padding: 8,
+                borderRadius: 4,
+                border: '1px solid #ccc',
+                resize: 'vertical',
+              }}
             />
           </div>
 
@@ -109,36 +135,88 @@ export function CardModal() {
             <input
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
-              style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+              style={{
+                width: '100%',
+                padding: 8,
+                borderRadius: 4,
+                border: '1px solid #ccc',
+              }}
             />
           </div>
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', marginBottom: 8 }}>Link URL adicional</label>
+            <label style={{ display: 'block', marginBottom: 8 }}>
+              Link URL adicional
+            </label>
             <input
               value={link}
               onChange={(e) => {
                 setLink(e.target.value)
                 setLinkError('')
               }}
-              style={{ width: '100%', padding: 8, borderRadius: 4, border: '1px solid #ccc' }}
+              style={{
+                width: '100%',
+                padding: 8,
+                borderRadius: 4,
+                border: '1px solid #ccc',
+              }}
             />
-            {linkError && <p style={{ color: 'red', fontSize: 12, marginTop: 4 }}>{linkError}</p>}
+            {linkError && (
+              <p style={{ color: 'red', fontSize: 12, marginTop: 4 }}>
+                {linkError}
+              </p>
+            )}
           </div>
 
-          {submitError && <p style={{ color: 'red', fontSize: 14, marginTop: 16 }}>{submitError}</p>}
+          {submitError && (
+            <p style={{ color: 'red', fontSize: 14, marginTop: 16 }}>
+              {submitError}
+            </p>
+          )}
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 24 }}>
+          <div
+            style={{
+              display: 'flex',
+              justifyContent: 'flex-end',
+              gap: 8,
+              marginTop: 24,
+            }}
+          >
+            <button
+              type="button"
+              onClick={handleDelete}
+              style={{
+                padding: '10px 16px',
+                borderRadius: 8,
+                border: 'none',
+                background: '#ef4444',
+                color: 'white',
+                marginRight: 'auto',
+              }}
+            >
+              Delete
+            </button>
             <button
               type="button"
               onClick={closeCardModal}
-              style={{ padding: '10px 16px', borderRadius: 8, border: 'none', background: '#eee' }}
+              style={{
+                padding: '10px 16px',
+                borderRadius: 8,
+                border: 'none',
+                background: '#eee',
+              }}
             >
               Cancel
             </button>
             <button
               type="submit"
-              style={{ padding: '10px 16px', borderRadius: 8, border: 'none', background: '#0c66e4', color: 'white' }}
+              style={{
+                padding: '10px 16px',
+                borderRadius: 8,
+                border: 'none',
+                background: '#0c66e4',
+                color: 'white',
+              }}
             >
               Guardar
             </button>

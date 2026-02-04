@@ -110,7 +110,11 @@ export function List({ list }: ListProps) {
           </div>
         )}
         <button
-          onClick={() => deleteList(list.id)}
+          onClick={() => {
+            if (window.confirm('Are you sure you want to delete this list?')) {
+              deleteList(list.id)
+            }
+          }}
           style={{
             background: 'transparent',
             border: 'none',
