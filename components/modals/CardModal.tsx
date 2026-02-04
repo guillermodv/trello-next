@@ -12,6 +12,7 @@ export function CardModal() {
   const [author, setAuthor] = useState('')
   const [link, setLink] = useState('')
   const [linkError, setLinkError] = useState('')
+  const [submitError, setSubmitError] = useState('')
 
   useEffect(() => {
     if (activeCard) {
@@ -20,6 +21,7 @@ export function CardModal() {
       setAuthor(activeCard.author || '')
       setLink(activeCard.link || '')
       setLinkError('')
+      setSubmitError('')
     }
   }, [activeCard])
 
@@ -31,6 +33,8 @@ export function CardModal() {
       setLinkError('Please enter a valid URL (e.g., https://example.com)')
       return
     }
+    setLinkError('')
+    setSubmitError('')
 
     const updatedFields = {
       title: title.trim(),
@@ -39,8 +43,13 @@ export function CardModal() {
       link: link.trim(),
     }
 
-    await updateCard(activeCard.id, updatedFields)
-    closeCardModal()
+    const error = await updateCard(activeCard.id, updatedFields)
+
+    if (error) {
+      setSubmitError(`Error al guardar: ${error.message}`)
+    } else {
+      closeCardModal()
+    }
   }
 
   if (!isCardModalOpen || !activeCard) {
@@ -116,6 +125,8 @@ export function CardModal() {
             />
             {linkError && <p style={{ color: 'red', fontSize: 12, marginTop: 4 }}>{linkError}</p>}
           </div>
+
+          {submitError && <p style={{ color: 'red', fontSize: 14, marginTop: 16 }}>{submitError}</p>}
 
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 24 }}>
             <button

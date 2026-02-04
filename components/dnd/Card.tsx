@@ -31,8 +31,29 @@ export function Card({ card }: CardProps) {
       : CSS.Transform.toString(transform),
     boxShadow: isDragging
       ? '0 12px 24px rgba(0,0,0,0.2)'
-      : '0 1px 1px rgba(0,0,0,0.1)',
+      : '0 1px 2px rgba(0,0,0,0.1)',
   }
+
+  const Labels = () => (
+    <div style={{ display: 'flex', gap: '4px', marginBottom: '4px' }}>
+      <div
+        style={{
+          width: '32px',
+          height: '8px',
+          borderRadius: '4px',
+          background: '#4bce97',
+        }}
+      ></div>
+      <div
+        style={{
+          width: '32px',
+          height: '8px',
+          borderRadius: '4px',
+          background: '#f5cd47',
+        }}
+      ></div>
+    </div>
+  )
 
   return (
     <div
@@ -40,34 +61,54 @@ export function Card({ card }: CardProps) {
       style={{
         ...style,
         background: 'white',
-        padding: 16,
-        borderRadius: 8,
+        padding: '8px',
+        borderRadius: '8px',
         boxShadow: '0 1px 1px rgba(0,0,0,0.1)',
-        position: 'relative',
         cursor: 'pointer',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '8px',
       }}
       onClick={() => openCardModal(card)}
       {...attributes}
       {...listeners}
     >
-      {card.title}
-      {card.link && (
-        <div style={{ marginTop: 8 }}>
-          <a
-            href={card.link}
-            target="_blank"
-            rel="noopener noreferrer"
-            onClick={(e) => e.stopPropagation()}
-            style={{
-              fontSize: 12,
-              color: '#0c66e4',
-              wordBreak: 'break-all',
-            }}
-          >
-            🔗 Link
-          </a>
+      <Labels />
+      <p style={{ fontSize: '14px', color: '#172b4d' }}>{card.title}</p>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+        }}
+      >
+        <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+          {card.description && (
+            <span style={{ fontSize: '12px', color: '#5e6c84' }}>📝</span>
+          )}
+          {card.link && (
+            <a
+              href={card.link}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              style={{
+                fontSize: '12px',
+                color: '#5e6c84',
+                textDecoration: 'none',
+              }}
+            >
+              🔗
+            </a>
+          )}
         </div>
-      )}
+        {card.author && (
+          <div style={{ fontSize: '12px', color: '#5e6c84' }}>
+            {card.author}
+          </div>
+        )}
+      </div>
     </div>
   )
 }

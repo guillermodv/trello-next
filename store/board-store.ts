@@ -1,3 +1,4 @@
+import { PostgrestError } from '@supabase/supabase-js'
 import { createClient } from '@/lib/supabase'
 import { Board, Card, List } from '@/lib/types'
 import { create } from 'zustand'
@@ -19,7 +20,10 @@ interface BoardState {
   deleteList: (listId: string) => Promise<void>
   deleteCard: (cardId: string) => Promise<void>
   updateListTitle: (listId: string, newTitle: string) => Promise<void>
-  updateCard: (cardId: string, updatedFields: Partial<Card>) => Promise<void>
+  updateCard: (
+    cardId: string,
+    updatedFields: Partial<Card>
+  ) => Promise<PostgrestError | null>
   handleDragEnd: (event: DragEndEvent) => void
   isCardModalOpen: boolean
   activeCard: Card | null
@@ -185,26 +189,29 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ lists: newLists })
   },
   updateCard: async (cardId: string, updatedFields: Partial<Card>) => {
-    const { error } = await supabase
+    const { data: updatedCard, error } = await supabase
       .from(API.CARDS)
       .update(updatedFields)
       .eq('id', cardId)
+      .select()
+      .single()
 
-    if (error) {
+    if (error || !updatedCard) {
       console.error('Failed to update card:', error)
-      return
+      return error
     }
 
     const newLists = get().lists.map((list) => ({
       ...list,
       cards: list.cards.map((card) => {
         if (card.id === cardId) {
-          return { ...card, ...updatedFields }
+          return { ...card, ...updatedCard }
         }
         return card
       }),
     }))
     set({ lists: newLists })
+    return null
   },
   handleDragEnd: async (event: DragEndEvent) => {
     const { active, over } = event

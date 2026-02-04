@@ -14,5 +14,12 @@ export default function BoardPage({ params }: { params: { boardId: string } }) {
     return <div>Loading board...</div>
   }
 
-  return <Board />
+  return (
+    <div style={{ padding: '20px' }}>
+      <h1 style={{ fontSize: '24px', fontWeight: 'bold', marginBottom: '20px' }}>
+        {board.title}
+      </h1>
+      <Board />
+    </div>
+  )
 }

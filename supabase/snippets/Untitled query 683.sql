@@ -54,7 +54,9 @@ create table cards (
   list_id uuid not null references lists(id) on delete cascade,
   title text not null,
   description text default '',
-  position int not null
+  position int not null,
+  author text,
+  link text
 );
 
 -- =========================
@@ -160,16 +162,16 @@ insert into lists (id, board_id, title, position) values
 ('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'En testing', 2),
 ('e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Deploy', 3);
 
-insert into cards (list_id, title, position) values
+insert into cards (list_id, title, position, author, link) values
 -- My Sample Trello Board
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Corregir bug visual', 0),
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Validar registro', 1),
-('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Subida de archivos', 0),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Corregir bug visual', 0, 'John Doe', 'https://example.com'),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Validar registro', 1, '', ''),
+('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Subida de archivos', 0, 'Jane Doe', ''),
 -- Proyecto personal
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Comprar monitor', 0),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Nuevo teclado', 0),
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Comprar monitor', 0, '', ''),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Nuevo teclado', 0, '', ''),
 -- Proyecto de trabajo
-('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Autenticación', 0);
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Autenticación', 0, 'Admin', '');
 
 -- =========================
 -- REALTIME
