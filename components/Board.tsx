@@ -17,6 +17,7 @@ import { useBoardStore } from '@/store/board-store'
 import { List } from '@/components/dnd/List'
 import { Card } from '@/components/dnd/Card'
 import { Card as CardType, List as ListType } from '@/lib/types'
+import { MESSAGES, PLACEHOLDERS } from '@/lib/constants'
 
 function AddListForm() {
   const { addList } = useBoardStore()
@@ -47,7 +48,7 @@ function AddListForm() {
           <input
             value={newListTitle}
             onChange={(e) => setNewListTitle(e.target.value)}
-            placeholder="Enter list title..."
+            placeholder={PLACEHOLDERS.ENTER_LIST_TITLE}
             style={{
               width: '100%',
               border: '2px solid #0c66e4',
@@ -68,7 +69,7 @@ function AddListForm() {
                 cursor: 'pointer',
               }}
             >
-              Add list
+              {MESSAGES.ADD_LIST}
             </button>
             <button
               onClick={() => setIsAdding(false)}
@@ -97,7 +98,7 @@ function AddListForm() {
             cursor: 'pointer',
           }}
         >
-          + Add another list
+          {MESSAGES.ADD_ANOTHER_LIST}
         </button>
       )}
     </div>

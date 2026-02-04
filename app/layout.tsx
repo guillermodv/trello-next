@@ -1,5 +1,4 @@
 import Footer from '../components/Footer';
-import Header from '../components/Header';
 import Navbar from '../components/Navbar';
 import './globals.css';
 import { createClient } from '@/lib/supabase-server'; // Import server-side client
@@ -13,7 +12,6 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="en">
       <body>
-        <Header />
         <Navbar initialSession={session} /> {/* Pass session as prop */}
         <main style={{ flexGrow: 1 }}>
           {children}

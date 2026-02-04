@@ -3,11 +3,16 @@ import { createClient } from '@/lib/supabase'
 import Link from 'next/link'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import { ROUTES, MESSAGES, NAV_LINKS } from '@/lib/constants'
 
-export default function Navbar({ initialSession }: { initialSession: any | null }) { // Accept initialSession prop
+export default function Navbar({
+  initialSession,
+}: {
+  initialSession: any | null
+}) {
   const pathname = usePathname()
   const router = useRouter()
-  const [session, setSession] = useState<any>(initialSession) // Initialize state with prop
+  const [session, setSession] = useState<any>(initialSession)
   const supabase = createClient()
 
   useEffect(() => {
@@ -22,12 +27,8 @@ export default function Navbar({ initialSession }: { initialSession: any | null 
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
-    router.push('/login')
+    router.push(ROUTES.LOGIN)
   }
-
-  const navLinks = [
-    { name: 'Tableros', href: '/boards' },
-  ]
 
   return (
     <nav
@@ -39,7 +40,12 @@ export default function Navbar({ initialSession }: { initialSession: any | null 
         alignItems: 'center',
       }}
     >
-      {navLinks.map((link) => {
+      <Link href={ROUTES.HOME} style={{ textDecoration: 'none' }}>
+        <h1 style={{ margin: 0, fontSize: '1.5rem', color: 'white' }}>
+          Tablerito
+        </h1>
+      </Link>
+      {NAV_LINKS.map((link) => {
         const isActive = pathname === link.href
         return (
           <Link
@@ -60,7 +66,7 @@ export default function Navbar({ initialSession }: { initialSession: any | null 
         <button
           onClick={handleLogout}
           style={{
-            marginLeft: 'auto', // Pushes the button to the right
+            marginLeft: 'auto',
             background: '#dc3545',
             color: 'white',
             border: 'none',
@@ -70,11 +76,11 @@ export default function Navbar({ initialSession }: { initialSession: any | null 
             fontSize: 16,
           }}
         >
-          Logout
+          {MESSAGES.LOGOUT}
         </button>
       ) : (
         <Link
-          href="/login"
+          href={ROUTES.LOGIN}
           style={{
             marginLeft: 'auto',
             background: '#0c66e4',
@@ -87,7 +93,7 @@ export default function Navbar({ initialSession }: { initialSession: any | null 
             textDecoration: 'none',
           }}
         >
-          Login
+          {MESSAGES.LOGIN}
         </Link>
       )}
     </nav>

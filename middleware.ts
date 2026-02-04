@@ -1,5 +1,6 @@
 import { createServerClient, type CookieOptions } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
+import { ROUTES } from '@/lib/constants'
 
 export async function middleware(request: NextRequest) {
   let response = NextResponse.next({
@@ -58,19 +59,19 @@ export async function middleware(request: NextRequest) {
     data: { session },
   } = await supabase.auth.getSession()
 
-  const publicRoutes = ['/', '/login'] // Define public routes
+  const publicRoutes = [ROUTES.LOGIN] // Define public routes
 
   // Redirect authenticated users from login page to boards
-  if (session && request.nextUrl.pathname === '/login') {
+  if (session && request.nextUrl.pathname === ROUTES.LOGIN) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/boards'
+    redirectUrl.pathname = ROUTES.BOARDS
     return NextResponse.redirect(redirectUrl)
   }
 
   // Redirect unauthenticated users from protected routes to login
   if (!session && !publicRoutes.includes(request.nextUrl.pathname)) {
     const redirectUrl = request.nextUrl.clone()
-    redirectUrl.pathname = '/login'
+    redirectUrl.pathname = ROUTES.LOGIN
     return NextResponse.redirect(redirectUrl)
   }
 
@@ -78,15 +79,5 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - api (API routes)
-     * - any files in the public folder (e.g., images, fonts)
-     */
-    '/((?!_next/static|_next/image|favicon.ico|api|.*\..*).*)',
-  ],
+  matcher: [ROUTES.HOME, ROUTES.LOGIN, `${ROUTES.BOARDS}/:path*`],
 }

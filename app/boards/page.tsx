@@ -3,6 +3,12 @@ import { FormEvent, useEffect, useState } from 'react'
 import Link from 'next/link'
 import { useBoardStore } from '@/store/board-store'
 import { createClient } from '@/lib/supabase'
+import {
+  API,
+  MESSAGES,
+  PLACEHOLDERS,
+  ROUTES,
+} from '@/lib/constants'
 
 const supabase = createClient()
 
@@ -14,10 +20,9 @@ function CreateBoardForm() {
   const handleCreateBoard = async (e: FormEvent) => {
     e.preventDefault()
     if (newBoardTitle.trim()) {
-      const { data, error } = await supabase
-        .from('boards')
+      const { error } = await supabase
+        .from(API.BOARDS)
         .insert({ title: newBoardTitle.trim() })
-        .select()
         .single()
 
       if (error) {
@@ -45,7 +50,7 @@ function CreateBoardForm() {
           <input
             value={newBoardTitle}
             onChange={(e) => setNewBoardTitle(e.target.value)}
-            placeholder="Enter board title..."
+            placeholder={PLACEHOLDERS.ENTER_BOARD_TITLE}
             style={{
               width: '100%',
               border: '2px solid #0c66e4',
@@ -66,7 +71,7 @@ function CreateBoardForm() {
                 cursor: 'pointer',
               }}
             >
-              Create board
+              {MESSAGES.CREATE_BOARD}
             </button>
             <button
               onClick={() => setIsCreating(false)}
@@ -96,7 +101,7 @@ function CreateBoardForm() {
             marginTop: 16,
           }}
         >
-          + Create new board
+          {MESSAGES.CREATE_NEW_BOARD}
         </button>
       )}
     </div>
@@ -113,7 +118,7 @@ export default function BoardsPage() {
   return (
     <div style={{ padding: 24, maxWidth: 600, margin: '0 auto' }}>
       <h1 style={{ fontSize: 24, fontWeight: 'bold', marginBottom: 24 }}>
-        My Boards
+        {MESSAGES.MY_BOARDS}
       </h1>
       <div
         style={{
@@ -124,7 +129,7 @@ export default function BoardsPage() {
       >
         {boards.map((board) => (
           <Link
-            href={`/boards/${board.id}`}
+            href={`${ROUTES.BOARDS}/${board.id}`}
             key={board.id}
             style={{
               display: 'block',
@@ -145,3 +150,4 @@ export default function BoardsPage() {
     </div>
   )
 }
+

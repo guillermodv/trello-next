@@ -1,8 +1,9 @@
 import { createClient } from '@/lib/supabase'
 import { Board, Card, List } from '@/lib/types'
-import { DragEndEvent } from '@dnd-kit/core'
-import { arrayMove } from '@dnd-kit/sortable'
 import { create } from 'zustand'
+import { arrayMove } from '@dnd-kit/sortable'
+import { DragEndEvent } from '@dnd-kit/core'
+import { API } from '@/lib/constants'
 
 const supabase = createClient()
 
@@ -30,7 +31,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   fetchBoards: async () => {
     try {
       const { data: boards, error } = await supabase
-        .from('boards')
+        .from(API.BOARDS)
         .select('*')
         .order('created_at')
 
@@ -47,7 +48,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   fetchBoardById: async (boardId: string) => {
     try {
       const { data: board, error: boardError } = await supabase
-        .from('boards')
+        .from(API.BOARDS)
         .select('*')
         .eq('id', boardId)
         .single()
@@ -57,7 +58,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       }
 
       const { data: lists, error: listsError } = await supabase
-        .from('lists')
+        .from(API.LISTS)
         .select('*, cards(*)')
         .eq('board_id', board.id)
         .order('position')
@@ -82,7 +83,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
 
     const newPosition = lists.length
     const { data: newList, error } = await supabase
-      .from('lists')
+      .from(API.LISTS)
       .insert({
         title,
         board_id: board.id,
@@ -105,7 +106,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
 
     const newPosition = targetList.cards.length
     const { data: newCard, error } = await supabase
-      .from('cards')
+      .from(API.CARDS)
       .insert({
         title,
         list_id: listId,
@@ -132,7 +133,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ lists: newLists })
   },
   deleteList: async (listId: string) => {
-    const { error } = await supabase.from('lists').delete().eq('id', listId)
+    const { error } = await supabase.from(API.LISTS).delete().eq('id', listId)
 
     if (error) {
       console.error('Failed to delete list:', error)
@@ -143,7 +144,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     set({ lists: newLists })
   },
   deleteCard: async (cardId: string) => {
-    const { error } = await supabase.from('cards').delete().eq('id', cardId)
+    const { error } = await supabase.from(API.CARDS).delete().eq('id', cardId)
 
     if (error) {
       console.error('Failed to delete card:', error)
@@ -158,7 +159,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   },
   updateListTitle: async (listId: string, newTitle: string) => {
     const { error } = await supabase
-      .from('lists')
+      .from(API.LISTS)
       .update({ title: newTitle })
       .eq('id', listId)
 
@@ -177,7 +178,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
   },
   updateCardTitle: async (cardId: string, newTitle: string) => {
     const { error } = await supabase
-      .from('cards')
+      .from(API.CARDS)
       .update({ title: newTitle })
       .eq('id', cardId)
 
@@ -217,7 +218,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
 
       const updates = newLists.map((list, index) =>
         supabase
-          .from('lists')
+          .from(API.LISTS)
           .update({ position: index })
           .eq('id', list.id)
       )
@@ -280,7 +281,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       for (let i = 0; i < updatedSourceList.cards.length; i++) {
         updates.push(
           supabase
-            .from('cards')
+            .from(API.CARDS)
             .update({ position: i })
             .eq('id', updatedSourceList.cards[i].id)
         )
@@ -289,7 +290,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
         for (let i = 0; i < updatedDestList.cards.length; i++) {
           updates.push(
             supabase
-              .from('cards')
+              .from(API.CARDS)
               .update({ position: i, list_id: destList.id })
               .eq('id', updatedDestList.cards[i].id)
           )

@@ -1,4 +1,3 @@
-import React from 'react';
 
 const Footer = () => {
   return (
@@ -10,7 +9,7 @@ const Footer = () => {
       marginTop: 'auto', // Pushes the footer to the bottom
       boxShadow: '0 -2px 4px rgba(0,0,0,0.1)'
     }}>
-      <p style={{ margin: 0, fontSize: '0.9rem' }}>&copy; {new Date().getFullYear()} Trello Clone. All rights reserved.</p>
+      <p style={{ margin: 0, fontSize: '0.9rem' }}>&copy; {new Date().getFullYear()} Tablerito. All rights reserved.</p>
     </footer>
   );
 };

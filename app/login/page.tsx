@@ -2,6 +2,7 @@
 import { createClient } from '@/lib/supabase'
 import { useRouter } from 'next/navigation'
 import { useState } from 'react'
+import { ROUTES, MESSAGES, PLACEHOLDERS } from '@/lib/constants'
 
 export default function LoginPage() {
   const [email, setEmail] = useState('')
@@ -24,7 +25,7 @@ export default function LoginPage() {
     if (error) {
       setError(error.message)
     } else {
-      router.push('/boards')
+      router.push(ROUTES.BOARDS)
       router.refresh()
     }
     setLoading(false)
@@ -50,11 +51,11 @@ export default function LoginPage() {
           textAlign: 'center',
         }}
       >
-        <h1 style={{ marginBottom: 24, color: '#172b4d' }}>Login</h1>
+        <h1 style={{ marginBottom: 24, color: '#172b4d' }}>{MESSAGES.LOGIN}</h1>
         <form onSubmit={handleLogin}>
           <input
             type="email"
-            placeholder="Email"
+            placeholder={PLACEHOLDERS.EMAIL}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -69,7 +70,7 @@ export default function LoginPage() {
           />
           <input
             type="password"
-            placeholder="Password"
+            placeholder={PLACEHOLDERS.PASSWORD}
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -97,7 +98,7 @@ export default function LoginPage() {
               opacity: loading ? 0.7 : 1,
             }}
           >
-            {loading ? 'Logging in...' : 'Login'}
+            {loading ? MESSAGES.LOGGING_IN : MESSAGES.LOGIN}
           </button>
           {error && (
             <p style={{ color: 'red', marginTop: 16, fontSize: 14 }}>{error}</p>
