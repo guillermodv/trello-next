@@ -1,5 +1,5 @@
 'use client'
-import { FormEvent, useEffect, useState } from 'react'
+import { FormEvent, useState } from 'react'
 import {
   DndContext,
   DragOverlay,
@@ -105,7 +105,7 @@ function AddListForm() {
 }
 
 export default function Board() {
-  const { lists, fetchBoard, handleDragEnd } = useBoardStore()
+  const { lists, handleDragEnd } = useBoardStore()
   const [activeCard, setActiveCard] = useState<CardType | null>(null)
   const [activeList, setActiveList] = useState<ListType | null>(null)
 
@@ -116,10 +116,6 @@ export default function Board() {
       },
     })
   )
-
-  useEffect(() => {
-    fetchBoard()
-  }, [fetchBoard])
 
   const handleDragStart = (event: DragStartEvent) => {
     const { active } = event

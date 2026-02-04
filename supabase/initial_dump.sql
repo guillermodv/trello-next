@@ -141,17 +141,35 @@ using (true);
 -- =========================
 
 insert into boards (id, title) values
-('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'My Sample Trello Board');
+('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'My Sample Trello Board'),
+('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Proyecto personal'),
+('a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Proyecto de trabajo');
 
 insert into lists (id, board_id, title, position) values
+-- My Sample Trello Board
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Por hacer', 0),
 ('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'En progreso', 1),
-('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Hecho', 2);
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Hecho', 2),
+-- Proyecto personal
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Ideas', 0),
+('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Comprado', 1),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Wishlist', 2),
+-- Proyecto de trabajo
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Backlog', 0),
+('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'En desarrollo', 1),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'En testing', 2),
+('e0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'a0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Deploy', 3);
 
 insert into cards (list_id, title, position) values
+-- My Sample Trello Board
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Corregir bug visual', 0),
 ('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Validar registro', 1),
-('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Subida de archivos', 0);
+('c0eebc99-9c0b-4ef8-bb6d-6bb9bd380a11', 'Subida de archivos', 0),
+-- Proyecto personal
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Comprar monitor', 0),
+('d0eebc99-9c0b-4ef8-bb6d-6bb9bd380a12', 'Nuevo teclado', 0),
+-- Proyecto de trabajo
+('b0eebc99-9c0b-4ef8-bb6d-6bb9bd380a13', 'Autenticación', 0);
 
 -- =========================
 -- REALTIME
