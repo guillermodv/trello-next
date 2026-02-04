@@ -54,9 +54,9 @@ create table cards (
   list_id uuid not null references lists(id) on delete cascade,
   title text not null,
   description text default '',
-  "position" int not null,
-  author text default '',
-  link text default ''
+  position int not null,
+  author text,
+  link text
 );
 
 -- =========================

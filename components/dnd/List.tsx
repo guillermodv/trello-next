@@ -1,14 +1,15 @@
 'use client'
+import { MESSAGES } from '@/lib/constants'
+import { List as ListType } from '@/lib/types'
+import { useBoardStore } from '@/store/board-store'
 import {
   SortableContext,
   useSortable,
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { List as ListType } from '@/lib/types'
-import { Card } from './Card'
-import { useBoardStore } from '@/store/board-store'
 import { FormEvent, useState } from 'react'
+import { Card } from './Card'
 
 interface ListProps {
   list: ListType
@@ -138,7 +139,7 @@ export function List({ list }: ListProps) {
             <textarea
               value={newCardTitle}
               onChange={(e) => setNewCardTitle(e.target.value)}
-              placeholder="Enter a title for this card..."
+              placeholder={MESSAGES.CARD_TITLE}
               style={{
                 width: '100%',
                 border: 'none',
@@ -160,7 +161,7 @@ export function List({ list }: ListProps) {
                   cursor: 'pointer',
                 }}
               >
-                Add card
+                {MESSAGES.ADD_CARD}
               </button>
               <button
                 onClick={() => setIsAdding(false)}
@@ -188,7 +189,7 @@ export function List({ list }: ListProps) {
               cursor: 'pointer',
             }}
           >
-            + Add a card
+            {MESSAGES.ADD_CARD}
           </button>
         )}
       </div>

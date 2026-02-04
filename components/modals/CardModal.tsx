@@ -5,7 +5,8 @@ import { FormEvent, useEffect, useState } from 'react'
 const URL_REGEX = /^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i
 
 export function CardModal() {
-  const { isCardModalOpen, activeCard, closeModal, updateCard } = useBoardStore()
+  const { isCardModalOpen, activeCard, closeCardModal, updateCard } =
+    useBoardStore()
   const [title, setTitle] = useState('')
   const [description, setDescription] = useState('')
   const [author, setAuthor] = useState('')
@@ -22,7 +23,7 @@ export function CardModal() {
     }
   }, [activeCard])
 
-  const handleSubmit = (e: FormEvent) => {
+  const handleSubmit = async (e: FormEvent) => {
     e.preventDefault()
     if (!activeCard) return
 
@@ -38,8 +39,8 @@ export function CardModal() {
       link: link.trim(),
     }
 
-    updateCard(activeCard.id, updatedFields)
-    closeModal()
+    await updateCard(activeCard.id, updatedFields)
+    closeCardModal()
   }
 
   if (!isCardModalOpen || !activeCard) {
@@ -60,7 +61,7 @@ export function CardModal() {
         alignItems: 'center',
         zIndex: 1000,
       }}
-      onClick={closeModal}
+      onClick={closeCardModal}
     >
       <div
         style={{
@@ -73,10 +74,10 @@ export function CardModal() {
         onClick={(e) => e.stopPropagation()}
       >
         <form onSubmit={handleSubmit}>
-          <h2 style={{ marginBottom: 24 }}>Edit Card</h2>
+          <h2 style={{ marginBottom: 24 }}>Edit Tarjeta</h2>
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', marginBottom: 8 }}>Title</label>
+            <label style={{ display: 'block', marginBottom: 8 }}>Titulo</label>
             <input
               value={title}
               onChange={(e) => setTitle(e.target.value)}
@@ -85,7 +86,7 @@ export function CardModal() {
           </div>
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', marginBottom: 8 }}>Description</label>
+            <label style={{ display: 'block', marginBottom: 8 }}>Descripcion</label>
             <textarea
               value={description}
               onChange={(e) => setDescription(e.target.value)}
@@ -95,7 +96,7 @@ export function CardModal() {
           </div>
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', marginBottom: 8 }}>Author</label>
+            <label style={{ display: 'block', marginBottom: 8 }}>Autor</label>
             <input
               value={author}
               onChange={(e) => setAuthor(e.target.value)}
@@ -104,7 +105,7 @@ export function CardModal() {
           </div>
 
           <div style={{ marginBottom: 16 }}>
-            <label style={{ display: 'block', marginBottom: 8 }}>Link URL</label>
+            <label style={{ display: 'block', marginBottom: 8 }}>Link URL adicional</label>
             <input
               value={link}
               onChange={(e) => {
@@ -119,7 +120,7 @@ export function CardModal() {
           <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 8, marginTop: 24 }}>
             <button
               type="button"
-              onClick={closeModal}
+              onClick={closeCardModal}
               style={{ padding: '10px 16px', borderRadius: 8, border: 'none', background: '#eee' }}
             >
               Cancel
@@ -128,7 +129,7 @@ export function CardModal() {
               type="submit"
               style={{ padding: '10px 16px', borderRadius: 8, border: 'none', background: '#0c66e4', color: 'white' }}
             >
-              Save
+              Guardar
             </button>
           </div>
         </form>

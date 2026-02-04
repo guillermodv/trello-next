@@ -14,18 +14,20 @@ export const MESSAGES = {
   LOGIN: 'Login',
   LOGGING_IN: 'Logging in...',
   LOGOUT: 'Logout',
-  MY_BOARDS: 'My Boards',
-  CREATE_BOARD: 'Create board',
-  CREATE_NEW_BOARD: '+ Create new board',
-  ADD_LIST: 'Add list',
-  ADD_ANOTHER_LIST: '+ Add another list',
+  MY_BOARDS: 'Tableros Disponibles',
+  CREATE_BOARD: 'Crear tablero',
+  CREATE_NEW_BOARD: 'Crear nuevo tablero',
+  ADD_CARD: 'Agregar tarjeta',
+  ADD_LIST: 'Agregar lista',
+  ADD_ANOTHER_LIST: '+ Agregar otra lista',
+  CARD_TITLE: 'Ingresa un título para esta tarjeta...'
 }
 
 export const PLACEHOLDERS = {
   EMAIL: 'Email',
   PASSWORD: 'Password',
-  ENTER_BOARD_TITLE: 'Enter board title...',
-  ENTER_LIST_TITLE: 'Enter list title...',
+  ENTER_BOARD_TITLE: 'Ingresa un título para este tablero...',
+  ENTER_LIST_TITLE: 'Ingresa un título para esta lista...',
 }
 
 export const NAV_LINKS = [{ name: 'Tableros', href: ROUTES.BOARDS }]

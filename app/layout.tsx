@@ -1,22 +1,14 @@
-import Footer from '../components/Footer';
-import Navbar from '../components/Navbar';
-import './globals.css';
-import { createClient } from '@/lib/supabase-server'; // Import server-side client
+import './globals.css'
 
-export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const supabase = createClient(); // Create server-side client
-  const {
-    data: { session },
-  } = await supabase.auth.getSession(); // Fetch session server-side
-
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode
+}) {
   return (
     <html lang="en">
       <body>
-        <Navbar initialSession={session} /> {/* Pass session as prop */}
-        <main style={{ flexGrow: 1 }}>
-          {children}
-        </main>
-        <Footer />
+        {children}
       </body>
     </html>
   )
