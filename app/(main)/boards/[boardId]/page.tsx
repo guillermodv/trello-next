@@ -55,9 +55,14 @@ export default function BoardPage({ params }: { params: { boardId: string } }) {
             border: 'none',
             background: '#16a34a',
             color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '8px',
+            cursor: 'pointer',
           }}
         >
-          Export to Excel
+          <span>📄</span>
+          <span>Export to Excel</span>
         </button>
       </div>
       <Board />

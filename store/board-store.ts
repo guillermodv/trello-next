@@ -1,11 +1,11 @@
-import { PostgrestError } from '@supabase/supabase-js'
+import { API } from '@/lib/constants'
 import { createClient } from '@/lib/supabase'
 import { Board, Card, List } from '@/lib/types'
-import { create } from 'zustand'
-import { arrayMove } from '@dnd-kit/sortable'
 import { DragEndEvent } from '@dnd-kit/core'
-import { API } from '@/lib/constants'
+import { arrayMove } from '@dnd-kit/sortable'
+import { PostgrestError } from '@supabase/supabase-js'
 import toast from 'react-hot-toast'
+import { create } from 'zustand'
 
 const supabase = createClient()
 
@@ -75,16 +75,13 @@ export const useBoardStore = create<BoardState>((set, get) => ({
         .select('*, cards(*)')
         .eq('board_id', board.id)
         .order('position')
+        .order('position', { foreignTable: API.CARDS })
 
       if (listsError) {
         throw new Error(`Failed to fetch lists: ${listsError.message}`)
       }
 
-      for (const list of lists) {
-        list.cards.sort((a, b) => a.position - b.position)
-      }
-
-      set({ board: board as Board, lists })
+      set({ board: board as Board, lists: lists as List[] })
     } catch (error) {
       console.error('Failed to fetch or create board:', error)
       set({ board: null, lists: [] })
