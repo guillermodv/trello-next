@@ -19,14 +19,22 @@ interface BoardState {
   deleteList: (listId: string) => Promise<void>
   deleteCard: (cardId: string) => Promise<void>
   updateListTitle: (listId: string, newTitle: string) => Promise<void>
-  updateCardTitle: (cardId: string, newTitle: string) => Promise<void>
+  updateCard: (cardId: string, updatedFields: Partial<Card>) => Promise<void>
   handleDragEnd: (event: DragEndEvent) => void
+  isCardModalOpen: boolean
+  activeCard: Card | null
+  openCardModal: (card: Card) => void
+  closeCardModal: () => void
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
   boards: [],
   board: null,
   lists: [],
+  isCardModalOpen: false,
+  activeCard: null,
+  openCardModal: (card) => set({ isCardModalOpen: true, activeCard: card }),
+  closeCardModal: () => set({ isCardModalOpen: false, activeCard: null }),
   setLists: (lists) => set({ lists }),
   fetchBoards: async () => {
     try {
@@ -176,14 +184,14 @@ export const useBoardStore = create<BoardState>((set, get) => ({
     })
     set({ lists: newLists })
   },
-  updateCardTitle: async (cardId: string, newTitle: string) => {
+  updateCard: async (cardId: string, updatedFields: Partial<Card>) => {
     const { error } = await supabase
       .from(API.CARDS)
-      .update({ title: newTitle })
+      .update(updatedFields)
       .eq('id', cardId)
 
     if (error) {
-      console.error('Failed to update card title:', error)
+      console.error('Failed to update card:', error)
       return
     }
 
@@ -191,7 +199,7 @@ export const useBoardStore = create<BoardState>((set, get) => ({
       ...list,
       cards: list.cards.map((card) => {
         if (card.id === cardId) {
-          return { ...card, title: newTitle }
+          return { ...card, ...updatedFields }
         }
         return card
       }),

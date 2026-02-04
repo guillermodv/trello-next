@@ -1,7 +1,5 @@
 
-import { redirect } from 'next/navigation'
-import { ROUTES } from '@/lib/constants'
-
+// This page should not be rendered as middleware handles the redirect.
 export default function Home() {
-  redirect(ROUTES.BOARDS)
+  return <div>Loading...</div>
 }

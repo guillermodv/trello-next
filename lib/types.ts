@@ -4,6 +4,8 @@ export interface Card {
   title: string
   description: string | null
   position: number
+  author: string | null
+  link: string | null
 }
 
 export interface List {

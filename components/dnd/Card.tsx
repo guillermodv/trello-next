@@ -3,14 +3,13 @@ import { useSortable } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
 import { Card as CardType } from '@/lib/types'
 import { useBoardStore } from '@/store/board-store'
-import { useState } from 'react'
 
 interface CardProps {
   card: CardType
 }
 
 export function Card({ card }: CardProps) {
-  const [isEditing, setIsEditing] = useState(false)
+  const { openCardModal } = useBoardStore()
 
   const {
     attributes,
@@ -22,10 +21,7 @@ export function Card({ card }: CardProps) {
   } = useSortable({
     id: card.id,
     data: { type: 'Card', card },
-    disabled: isEditing,
   })
-  const { deleteCard, updateCardTitle } = useBoardStore()
-  const [cardTitle, setCardTitle] = useState(card.title)
 
   const style = {
     transition,
@@ -38,34 +34,6 @@ export function Card({ card }: CardProps) {
       : '0 1px 1px rgba(0,0,0,0.1)',
   }
 
-  const handleTitleChange = () => {
-    if (cardTitle.trim() && cardTitle.trim() !== card.title) {
-      updateCardTitle(card.id, cardTitle.trim())
-    }
-    setIsEditing(false)
-  }
-
-  if (isEditing) {
-    return (
-      <div ref={setNodeRef} style={style}>
-        <textarea
-          value={cardTitle}
-          onChange={(e) => setCardTitle(e.target.value)}
-          onBlur={handleTitleChange}
-          onKeyDown={(e) => e.key === 'Enter' && handleTitleChange()}
-          autoFocus
-          style={{
-            width: '100%',
-            border: '2px solid #0c66e4',
-            borderRadius: 8,
-            padding: 14,
-            resize: 'vertical',
-          }}
-        />
-      </div>
-    )
-  }
-
   return (
     <div
       ref={setNodeRef}
@@ -76,32 +44,30 @@ export function Card({ card }: CardProps) {
         borderRadius: 8,
         boxShadow: '0 1px 1px rgba(0,0,0,0.1)',
         position: 'relative',
+        cursor: 'pointer',
       }}
-      onClick={() => setIsEditing(true)}
+      onClick={() => openCardModal(card)}
+      {...attributes}
+      {...listeners}
     >
-      <div {...listeners} {...attributes} style={{ cursor: 'grab', paddingRight: 20 }}>
-        {card.title}
-      </div>
-      <button
-        onClick={(e) => {
-          e.stopPropagation()
-          deleteCard(card.id)
-        }}
-        style={{
-          position: 'absolute',
-          top: 4,
-          right: 4,
-          background: 'transparent',
-          border: 'none',
-          cursor: 'pointer',
-          fontSize: 16,
-          color: '#6b778c',
-          padding: 4,
-          lineHeight: 1,
-        }}
-      >
-        ×
-      </button>
+      {card.title}
+      {card.link && (
+        <div style={{ marginTop: 8 }}>
+          <a
+            href={card.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            onClick={(e) => e.stopPropagation()}
+            style={{
+              fontSize: 12,
+              color: '#0c66e4',
+              wordBreak: 'break-all',
+            }}
+          >
+            🔗 Link
+          </a>
+        </div>
+      )}
     </div>
   )
 }

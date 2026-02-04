@@ -18,6 +18,7 @@ import { List } from '@/components/dnd/List'
 import { Card } from '@/components/dnd/Card'
 import { Card as CardType, List as ListType } from '@/lib/types'
 import { MESSAGES, PLACEHOLDERS } from '@/lib/constants'
+import { CardModal } from './modals/CardModal'
 
 function AddListForm() {
   const { addList } = useBoardStore()
@@ -165,6 +166,7 @@ export default function Board() {
         {activeList ? <List list={activeList} /> : null}
         {activeCard ? <Card card={activeCard} /> : null}
       </DragOverlay>
+      <CardModal />
     </DndContext>
   )
 }
