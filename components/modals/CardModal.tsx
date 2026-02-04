@@ -16,6 +16,8 @@ export function CardModal() {
   const [description, setDescription] = useState('')
   const [author, setAuthor] = useState('')
   const [link, setLink] = useState('')
+  const [startDate, setStartDate] = useState('')
+  const [endDate, setEndDate] = useState('')
   const [linkError, setLinkError] = useState('')
   const [submitError, setSubmitError] = useState('')
 
@@ -25,6 +27,8 @@ export function CardModal() {
       setDescription(activeCard.description || '')
       setAuthor(activeCard.author || '')
       setLink(activeCard.link || '')
+      setStartDate(activeCard.start_date || '')
+      setEndDate(activeCard.end_date || '')
       setLinkError('')
       setSubmitError('')
     }
@@ -46,6 +50,8 @@ export function CardModal() {
       description: description.trim(),
       author: author.trim(),
       link: link.trim(),
+      start_date: startDate || null,
+      end_date: endDate || null,
     }
 
     const error = await updateCard(activeCard.id, updatedFields)
@@ -92,6 +98,8 @@ export function CardModal() {
           borderRadius: 12,
           width: '90%',
           maxWidth: 600,
+          maxHeight: '90vh',
+          overflowY: 'auto',
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -128,6 +136,41 @@ export function CardModal() {
                 resize: 'vertical',
               }}
             />
+          </div>
+
+          <div style={{ display: 'flex', gap: 16, marginBottom: 16 }}>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: 8 }}>
+                Fecha de inicio
+              </label>
+              <input
+                type="date"
+                value={startDate}
+                onChange={(e) => setStartDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 8,
+                  borderRadius: 4,
+                  border: '1px solid #ccc',
+                }}
+              />
+            </div>
+            <div style={{ flex: 1 }}>
+              <label style={{ display: 'block', marginBottom: 8 }}>
+                Fecha de finalizacion
+              </label>
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: 8,
+                  borderRadius: 4,
+                  border: '1px solid #ccc',
+                }}
+              />
+            </div>
           </div>
 
           <div style={{ marginBottom: 16 }}>

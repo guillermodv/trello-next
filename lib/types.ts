@@ -6,6 +6,8 @@ export interface Card {
   position: number
   author: string | null
   link: string | null
+  start_date: string | null
+  end_date: string | null
 }
 
 export interface List {

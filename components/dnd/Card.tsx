@@ -55,6 +55,32 @@ export function Card({ card }: CardProps) {
     </div>
   )
 
+  const Dates = () => {
+    if (!card.start_date && !card.end_date) return null
+
+    const today = new Date()
+    today.setHours(0, 0, 0, 0) 
+
+    const endDate = card.end_date ? new Date(card.end_date) : null
+    let dateColor = '#5e6c84'
+    if (endDate) {
+      if (endDate < today) {
+        dateColor = '#ef4444' // red
+      } else if (endDate.getTime() === today.getTime()) {
+        dateColor = '#f59e0b' // amber
+      }
+    }
+
+    return (
+      <div style={{ display: 'flex', gap: '4px', alignItems: 'center', fontSize: '12px', color: dateColor }}>
+        <span>📅</span>
+        {card.start_date && <span>{new Date(card.start_date).toLocaleDateString()}</span>}
+        {card.start_date && card.end_date && <span>-</span>}
+        {card.end_date && <span>{new Date(card.end_date).toLocaleDateString()}</span>}
+      </div>
+    )
+  }
+
   return (
     <div
       ref={setNodeRef}
@@ -75,7 +101,7 @@ export function Card({ card }: CardProps) {
     >
       <Labels />
       <p style={{ fontSize: '14px', color: '#172b4d' }}>{card.title}</p>
-
+      <Dates />
       <div
         style={{
           display: 'flex',

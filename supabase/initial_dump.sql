@@ -8,7 +8,7 @@ create extension if not exists pgcrypto;
 -- DROP POLICIES
 -- =========================
 
-do $$ declare r record;
+do $ declare r record;
 begin
   for r in (
     select schemaname, tablename, policyname
@@ -21,7 +21,7 @@ begin
       r.policyname, r.schemaname, r.tablename
     );
   end loop;
-end $$;
+end $;
 
 -- =========================
 -- DROP TABLES
@@ -56,7 +56,9 @@ create table cards (
   description text default '',
   position int not null,
   author text,
-  link text
+  link text,
+  start_date date,
+  end_date date
 );
 
 -- =========================
@@ -177,7 +179,7 @@ insert into cards (list_id, title, position, author, link) values
 -- REALTIME
 -- =========================
 
-do $$
+do $
 begin
   if exists (
     select 1
@@ -188,4 +190,4 @@ begin
     alter publication supabase_realtime add table lists;
     alter publication supabase_realtime add table cards;
   end if;
-end $$;
+end $;
