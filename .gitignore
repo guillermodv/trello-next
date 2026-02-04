@@ -6,3 +6,4 @@
 .next/trace
 package-lock.json
 .env
+.next/trace
