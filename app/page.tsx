@@ -1,6 +1,6 @@
 
-import Board from '@/components/Board'
+import { redirect } from 'next/navigation'
 
 export default function Home() {
-  return <Board />
+  redirect('/boards')
 }

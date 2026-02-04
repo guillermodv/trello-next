@@ -1,16 +1,18 @@
 import { createClient } from '@/lib/supabase'
 import { Board, Card, List } from '@/lib/types'
-import { create } from 'zustand'
-import { arrayMove } from '@dnd-kit/sortable'
 import { DragEndEvent } from '@dnd-kit/core'
+import { arrayMove } from '@dnd-kit/sortable'
+import { create } from 'zustand'
 
 const supabase = createClient()
 
 interface BoardState {
+  boards: Board[]
   board: Board | null
   lists: List[]
   setLists: (lists: List[]) => void
-  fetchBoard: () => Promise<void>
+  fetchBoards: () => Promise<void>
+  fetchBoardById: (boardId: string) => Promise<void>
   addList: (title: string) => Promise<void>
   addCard: (listId: string, title: string) => Promise<void>
   deleteList: (listId: string) => Promise<void>
@@ -21,33 +23,37 @@ interface BoardState {
 }
 
 export const useBoardStore = create<BoardState>((set, get) => ({
+  boards: [],
   board: null,
   lists: [],
   setLists: (lists) => set({ lists }),
-  fetchBoard: async () => {
+  fetchBoards: async () => {
     try {
-      let { data: board, error: boardError } = await supabase
+      const { data: boards, error } = await supabase
         .from('boards')
         .select('*')
-        .single()
+        .order('created_at')
 
-      if (boardError && boardError.code !== 'PGRST116') {
-        // PGRST116 is "Exact one row not found"
-        throw new Error(`Failed to fetch board: ${boardError.message}`)
+      if (error) {
+        throw new Error(`Failed to fetch boards: ${error.message}`)
       }
 
-      if (!board) {
-        console.log('No board found, creating a new one.')
-        const { data: newBoard, error: newBoardError } = await supabase
-          .from('boards')
-          .insert({ title: 'My First Board' })
-          .select()
-          .single()
+      set({ boards: boards as Board[] })
+    } catch (error) {
+      console.error('Failed to fetch boards:', error)
+      set({ boards: [] })
+    }
+  },
+  fetchBoardById: async (boardId: string) => {
+    try {
+      const { data: board, error: boardError } = await supabase
+        .from('boards')
+        .select('*')
+        .eq('id', boardId)
+        .single()
 
-        if (newBoardError) {
-          throw new Error(`Failed to create board: ${newBoardError.message}`)
-        }
-        board = newBoard
+      if (boardError) {
+        throw new Error(`Failed to fetch board: ${boardError.message}`)
       }
 
       const { data: lists, error: listsError } = await supabase

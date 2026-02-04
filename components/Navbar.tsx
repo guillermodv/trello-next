@@ -26,8 +26,7 @@ export default function Navbar({ initialSession }: { initialSession: any | null 
   }
 
   const navLinks = [
-    { name: 'Home', href: '/' },
-    { name: 'My Boards', href: '/boards' },
+    { name: 'Tableros', href: '/boards' },
   ]
 
   return (
